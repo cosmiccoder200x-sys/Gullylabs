@@ -159,7 +159,7 @@ function AdminChat() {
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
-    meta: [{ title: "Admin — GullyGadget" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "Admin — Gullylabs" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: Admin,
 });

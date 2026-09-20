@@ -24,7 +24,7 @@ declare global {
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
-    meta: [{ title: "My Account — GullyGadget", name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "My Account — Gullylabs", name: "robots", content: "noindex, nofollow" }],
   }),
   component: Account,
 });
@@ -210,7 +210,7 @@ function Account() {
           key: key_id,
           amount,
           currency,
-          name: "GullyGadget",
+          name: "Gullylabs",
           description: `Order #${orderId.slice(0, 8)}`,
           order_id: razorpay_order_id,
           handler: async (response: {

@@ -15,7 +15,7 @@ import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/my-returns")({
   head: () => ({
-    meta: [{ title: "My Returns | GullyGadget", name: "robots", content: "noindex" }],
+    meta: [{ title: "My Returns | Gullylabs", name: "robots", content: "noindex" }],
   }),
   component: MyReturns,
 });

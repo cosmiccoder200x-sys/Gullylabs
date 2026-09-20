@@ -26,13 +26,13 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "GullyGadget — Smart Gadgets for Everyday Life" },
+      { title: "Gullylabs — Smart Gadgets for Everyday Life" },
       {
         name: "description",
         content:
           "Shop trending home appliances and smart gadgets under ₹999. Free shipping over ₹499, Cash on Delivery across India.",
       },
-      { property: "og:title", content: "GullyGadget — Smart Gadgets for Everyday Life" },
+      { property: "og:title", content: "Gullylabs — Smart Gadgets for Everyday Life" },
       {
         property: "og:description",
         content:
@@ -224,9 +224,9 @@ function Index() {
         </div>
       </section>
 
-      {/* Why GullyGadget Section */}
+      {/* Why Gullylabs Section */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-        <SectionHeader title="Why GullyGadget" subtitle="Trusted by thousands of Indian homes" />
+        <SectionHeader title="Why Gullylabs" subtitle="Trusted by thousands of Indian homes" />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           <div className="flex items-start rounded-2xl bg-card p-4 ring-1 ring-border">
             <div className="flex-shrink-0 rounded-full bg-brand-soft text-brand">

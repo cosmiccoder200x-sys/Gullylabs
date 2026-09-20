@@ -11,7 +11,7 @@ import { OrderTimeline } from "@/components/orders/OrderTimeline";
 export const Route = createFileRoute("/_authenticated/order-confirmation/$orderId")({
   head: () => ({
     meta: [
-      { title: "Order Confirmed — GullyGadget" },
+      { title: "Order Confirmed — Gullylabs" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

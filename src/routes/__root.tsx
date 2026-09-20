@@ -128,14 +128,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "GullyGadget — Trending Home Appliances Under ₹999" },
+      { title: "Gullylabs — Trending Home Appliances Under ₹999" },
       {
         name: "description",
         content:
           "India's destination for premium home appliance gadgets under ₹1000 — mini coolers, kitchen tech, smart lighting & more. Free shipping. Cash on Delivery.",
       },
-      { name: "author", content: "GullyGadget" },
-      { property: "og:title", content: "GullyGadget — Smart Living Under ₹999" },
+      { name: "author", content: "Gullylabs" },
+      { property: "og:title", content: "Gullylabs — Smart Living Under ₹999" },
       {
         property: "og:description",
         content:

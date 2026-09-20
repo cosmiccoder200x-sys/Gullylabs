@@ -37,7 +37,7 @@ export const Route = createFileRoute("/products")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Shop All — GullyGadget" },
+      { title: "Shop All — Gullylabs" },
       { name: "description", content: "Browse trending home appliance gadgets under ₹1000." },
       { property: "og:url", content: "https://gullygadget.com/products" },
     ],

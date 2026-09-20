@@ -30,7 +30,7 @@ const phoneSchema = z.object({
 export const Route = createFileRoute("/auth")({
   validateSearch: authSearch,
   head: () => ({
-    meta: [{ title: "Sign in — GullyGadget" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "Sign in — Gullylabs" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: AuthPage,
 });

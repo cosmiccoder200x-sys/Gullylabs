@@ -36,7 +36,7 @@ export const Route = createFileRoute("/products/$slug")({
     const desc =
       (loaderData as any)?.short_description ??
       (loaderData as any)?.description ??
-      "Shop this product at GullyGadget.";
+      "Shop this product at Gullylabs.";
     const img = (loaderData as any)?.image_url ?? "";
     const title = `${name} | ${siteConfig.name}`;
     return {

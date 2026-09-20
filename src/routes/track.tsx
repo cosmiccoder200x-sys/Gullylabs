@@ -12,13 +12,13 @@ import { OrderTimeline } from "@/components/orders/OrderTimeline";
 export const Route = createFileRoute("/track")({
   head: () => ({
     meta: [
-      { title: "Track your order — GullyGadget" },
+      { title: "Track your order — Gullylabs" },
       {
         name: "description",
         content:
-          "Track your GullyGadget order status, carrier and tracking number using your order ID and email.",
+          "Track your Gullylabs order status, carrier and tracking number using your order ID and email.",
       },
-      { property: "og:title", content: "Track your GullyGadget order" },
+      { property: "og:title", content: "Track your Gullylabs order" },
       {
         property: "og:description",
         content: "Enter your order ID and email to view live shipping status.",

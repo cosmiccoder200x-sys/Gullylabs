@@ -15,7 +15,7 @@ import { Package, RefreshCw, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/returns-request")({
   head: () => ({
-    meta: [{ title: "Request Return | GullyGadget", name: "robots", content: "noindex" }],
+    meta: [{ title: "Request Return | Gullylabs", name: "robots", content: "noindex" }],
   }),
   component: ReturnsRequest,
 });

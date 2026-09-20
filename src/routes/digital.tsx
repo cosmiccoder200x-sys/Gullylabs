@@ -8,9 +8,9 @@ import { formatINR } from "@/lib/format";
 export const Route = createFileRoute("/digital")({
   head: () => ({
     meta: [
-      { title: "Digital Products — GullyGadget" },
+      { title: "Digital Products — Gullylabs" },
       { name: "description", content: "Shop digital products" },
-      { property: "og:title", content: "Digital Products — GullyGadget" },
+      { property: "og:title", content: "Digital Products — Gullylabs" },
       { property: "og:description", content: "Digital products for work, study, and business" },
     ],
   }),

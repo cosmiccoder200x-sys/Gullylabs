@@ -65,7 +65,7 @@ const schema = z.object({
 
 export const Route = createFileRoute("/_authenticated/checkout")({
   head: () => ({
-    meta: [{ title: "Checkout — GullyGadget" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "Checkout — Gullylabs" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: Checkout,
 });
@@ -240,7 +240,7 @@ function Checkout() {
         key: key_id,
         amount: amount,
         currency: currency,
-        name: "GullyGadget",
+        name: "Gullylabs",
         description: `Order #${orderId.slice(0, 8)}`,
         order_id: razorpay_order_id,
         handler: async (response: RazorpayResponse) => {
