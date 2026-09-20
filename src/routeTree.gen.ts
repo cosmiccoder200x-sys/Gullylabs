@@ -15,16 +15,19 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DigitalRouteImport } from './routes/digital'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as ReturnsRequestRouteImport } from './routes/returns-request'
 import { Route as ShippingRouteImport } from './routes/shipping'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TrackRouteImport } from './routes/track'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
+import { Route as AuthenticatedMyReturnsRouteImport } from './routes/_authenticated/my-returns'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as AuthenticatedOrderConfirmationOrderIdRouteImport } from './routes/_authenticated/order-confirmation.$orderId'
 
@@ -57,6 +60,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DigitalRoute = DigitalRouteImport.update({
+  id: '/digital',
+  path: '/digital',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
@@ -75,6 +83,11 @@ const ProductsRoute = ProductsRouteImport.update({
 const ReturnsRoute = ReturnsRouteImport.update({
   id: '/returns',
   path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReturnsRequestRoute = ReturnsRequestRouteImport.update({
+  id: '/returns-request',
+  path: '/returns-request',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShippingRoute = ShippingRouteImport.update({
@@ -107,6 +120,11 @@ const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMyReturnsRoute = AuthenticatedMyReturnsRouteImport.update({
+  id: '/my-returns',
+  path: '/my-returns',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ProductsSlugRoute = ProductsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -125,16 +143,19 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/digital': typeof DigitalRoute
   '/faq': typeof FaqRoute
   '/privacy': typeof PrivacyRoute
   '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
+  '/returns-request': typeof ReturnsRequestRoute
   '/shipping': typeof ShippingRoute
   '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
+  '/my-returns': typeof AuthenticatedMyReturnsRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/order-confirmation/$orderId': typeof AuthenticatedOrderConfirmationOrderIdRoute
 }
@@ -144,16 +165,19 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/digital': typeof DigitalRoute
   '/faq': typeof FaqRoute
   '/privacy': typeof PrivacyRoute
   '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
+  '/returns-request': typeof ReturnsRequestRoute
   '/shipping': typeof ShippingRoute
   '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
+  '/my-returns': typeof AuthenticatedMyReturnsRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/order-confirmation/$orderId': typeof AuthenticatedOrderConfirmationOrderIdRoute
 }
@@ -165,16 +189,19 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/digital': typeof DigitalRoute
   '/faq': typeof FaqRoute
   '/privacy': typeof PrivacyRoute
   '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
+  '/returns-request': typeof ReturnsRequestRoute
   '/shipping': typeof ShippingRoute
   '/terms': typeof TermsRoute
   '/track': typeof TrackRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
+  '/_authenticated/my-returns': typeof AuthenticatedMyReturnsRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/_authenticated/order-confirmation/$orderId': typeof AuthenticatedOrderConfirmationOrderIdRoute
 }
@@ -186,16 +213,19 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/contact'
+    | '/digital'
     | '/faq'
     | '/privacy'
     | '/products'
     | '/returns'
+    | '/returns-request'
     | '/shipping'
     | '/terms'
     | '/track'
     | '/account'
     | '/admin'
     | '/checkout'
+    | '/my-returns'
     | '/products/$slug'
     | '/order-confirmation/$orderId'
   fileRoutesByTo: FileRoutesByTo
@@ -205,16 +235,19 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/contact'
+    | '/digital'
     | '/faq'
     | '/privacy'
     | '/products'
     | '/returns'
+    | '/returns-request'
     | '/shipping'
     | '/terms'
     | '/track'
     | '/account'
     | '/admin'
     | '/checkout'
+    | '/my-returns'
     | '/products/$slug'
     | '/order-confirmation/$orderId'
   id:
@@ -225,16 +258,19 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cart'
     | '/contact'
+    | '/digital'
     | '/faq'
     | '/privacy'
     | '/products'
     | '/returns'
+    | '/returns-request'
     | '/shipping'
     | '/terms'
     | '/track'
     | '/_authenticated/account'
     | '/_authenticated/admin'
     | '/_authenticated/checkout'
+    | '/_authenticated/my-returns'
     | '/products/$slug'
     | '/_authenticated/order-confirmation/$orderId'
   fileRoutesById: FileRoutesById
@@ -246,10 +282,12 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
+  DigitalRoute: typeof DigitalRoute
   FaqRoute: typeof FaqRoute
   PrivacyRoute: typeof PrivacyRoute
   ProductsRoute: typeof ProductsRouteWithChildren
   ReturnsRoute: typeof ReturnsRoute
+  ReturnsRequestRoute: typeof ReturnsRequestRoute
   ShippingRoute: typeof ShippingRoute
   TermsRoute: typeof TermsRoute
   TrackRoute: typeof TrackRoute
@@ -299,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/digital': {
+      id: '/digital'
+      path: '/digital'
+      fullPath: '/digital'
+      preLoaderRoute: typeof DigitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -325,6 +370,13 @@ declare module '@tanstack/react-router' {
       path: '/returns'
       fullPath: '/returns'
       preLoaderRoute: typeof ReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/returns-request': {
+      id: '/returns-request'
+      path: '/returns-request'
+      fullPath: '/returns-request'
+      preLoaderRoute: typeof ReturnsRequestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shipping': {
@@ -369,6 +421,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCheckoutRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/my-returns': {
+      id: '/_authenticated/my-returns'
+      path: '/my-returns'
+      fullPath: '/my-returns'
+      preLoaderRoute: typeof AuthenticatedMyReturnsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/products/$slug': {
       id: '/products/$slug'
       path: '/$slug'
@@ -390,6 +449,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
+  AuthenticatedMyReturnsRoute: typeof AuthenticatedMyReturnsRoute
   AuthenticatedOrderConfirmationOrderIdRoute: typeof AuthenticatedOrderConfirmationOrderIdRoute
 }
 
@@ -397,6 +457,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
+  AuthenticatedMyReturnsRoute: AuthenticatedMyReturnsRoute,
   AuthenticatedOrderConfirmationOrderIdRoute:
     AuthenticatedOrderConfirmationOrderIdRoute,
 }
@@ -423,10 +484,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
+  DigitalRoute: DigitalRoute,
   FaqRoute: FaqRoute,
   PrivacyRoute: PrivacyRoute,
   ProductsRoute: ProductsRouteWithChildren,
   ReturnsRoute: ReturnsRoute,
+  ReturnsRequestRoute: ReturnsRequestRoute,
   ShippingRoute: ShippingRoute,
   TermsRoute: TermsRoute,
   TrackRoute: TrackRoute,

@@ -22,6 +22,140 @@ import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { AdminAnalytics } from "@/components/admin/AdminAnalytics";
 import { AdminInventory } from "@/components/admin/AdminInventory";
 import { AdminCustomers } from "@/components/admin/AdminCustomers";
+import { Package, MessageCircle, CheckCircle, XCircle, Clock } from "lucide-react";
+
+// ... existing imports ...
+
+function AdminReturns() {
+  const qc = useQueryClient();
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const { data: returns } = useQuery({
+    queryKey: ["admin-returns", statusFilter],
+    queryFn: async () => {
+      let q = supabase.from("return_requests").select("*").order("created_at", { ascending: false });
+      if (statusFilter !== "all") q = q.eq("status", statusFilter);
+      const { data } = await q.limit(100);
+      return data ?? [];
+    },
+  });
+
+  const update = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      const { error } = await supabase.from("return_requests").update({ status }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Status updated");
+      qc.invalidateQueries({ queryKey: ["admin-returns"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <div className="mt-6 space-y-4">
+      <div className="flex flex-wrap gap-2">
+        {["all", "pending", "approved", "rejected", "processed"].map((s) => (
+          <Button key={s} size="sm" variant={statusFilter === s ? "default" : "outline"} onClick={() => setStatusFilter(s)} className="rounded-full capitalize">
+            {s}
+          </Button>
+        ))}
+      </div>
+      {(returns ?? []).length === 0 ? (
+        <div className="rounded-3xl bg-white p-8 text-center ring-1 ring-border">
+          <Package className="mx-auto size-10 text-muted-foreground mb-3" />
+          <p className="text-sm text-muted-foreground">No return requests found.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {(returns ?? []).map((r: any) => (
+            <div key={r.id} className="rounded-2xl bg-white p-4 ring-1 ring-border">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium capitalize">{r.return_type} · {r.reason}</p>
+                  <p className="text-xs text-muted-foreground">{r.order_id?.slice(0, 8)} · {new Date(r.created_at).toLocaleDateString()}</p>
+                </div>
+                <span className={`rounded-full px-3 py-1 text-xs font-bold capitalize ${
+                  r.status === "approved" ? "bg-success/10 text-success" :
+                  r.status === "rejected" ? "bg-destructive/10 text-destructive" :
+                  "bg-amber-100 text-amber-700"
+                }`}>
+                  {r.status}
+                </span>
+              </div>
+              {r.status === "pending" && (
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" onClick={() => update.mutate({ id: r.id, status: "approved" })}>Approve</Button>
+                  <Button size="sm" variant="ghost" onClick={() => update.mutate({ id: r.id, status: "rejected" })}>Reject</Button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminChat() {
+  const qc = useQueryClient();
+  const { data: messages } = useQuery({
+    queryKey: ["admin-chat"],
+    queryFn: async () => {
+      const { data } = await supabase.from("chat_messages").select("*").order("created_at", { ascending: false }).limit(100);
+      return data ?? [];
+    },
+  });
+
+  const { data: products } = useQuery({
+    queryKey: ["admin-products-list"],
+    queryFn: async () => {
+      const { data } = await supabase.from("products").select("id, name").eq("is_active", true).limit(50);
+      return data ?? [];
+    },
+  });
+
+  const respond = useMutation({
+    mutationFn: async (msg: string) => {
+      const { error } = await supabase.from("chat_messages").insert({
+        message: msg,
+        sender_type: "agent",
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Response sent");
+      qc.invalidateQueries({ queryKey: ["admin-chat"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <div className="mt-6 space-y-4">
+      <div className="rounded-3xl bg-white p-4 ring-1 ring-border">
+        <h3 className="font-bold text-sm mb-3">Recent Messages</h3>
+        {(messages ?? []).length === 0 ? (
+          <p className="text-sm text-muted-foreground">No messages yet.</p>
+        ) : (
+          <div className="space-y-2 max-h-96 overflow-y-auto">
+            {(messages ?? []).map((m: any) => (
+              <div key={m.id} className={`rounded-xl p-3 text-sm ${
+                m.sender_type === "customer" ? "bg-brand-soft/30" : "bg-muted/30"
+              }`}>
+                <p className="font-medium">{m.sender_type === "customer" ? "Customer" : "Agent"}</p>
+                <p>{m.message}</p>
+                <p className="text-xs text-muted-foreground mt-1">{new Date(m.created_at).toLocaleString()}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Add Returns and Chat tab content
+// ... (append these after AdminSuppliers)
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -60,6 +194,8 @@ function Admin() {
           <TabsTrigger value="coupons">Coupons</TabsTrigger>
           <TabsTrigger value="shipping">Shipping</TabsTrigger>
           <TabsTrigger value="suppliers">Suppliers</TabsTrigger>
+          <TabsTrigger value="returns">Returns</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
         <TabsContent value="dashboard">
           <AdminDashboard />
@@ -93,6 +229,12 @@ function Admin() {
         </TabsContent>
         <TabsContent value="suppliers">
           <AdminSuppliers />
+        </TabsContent>
+        <TabsContent value="returns">
+          <AdminReturns />
+        </TabsContent>
+        <TabsContent value="chat">
+          <AdminChat />
         </TabsContent>
       </Tabs>
     </div>

@@ -21,6 +21,8 @@ import "@fontsource/outfit/800.css";
 import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ChatWidget } from "@/components/chat/ChatWidget";
+import { DeliveryNotification } from "@/components/product/DeliveryNotification";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -197,6 +199,8 @@ function RootComponent() {
         <Footer />
       </div>
       <Toaster position="top-center" richColors />
+      <ChatWidget />
+      <DeliveryNotification />
     </QueryClientProvider>
   );
 }

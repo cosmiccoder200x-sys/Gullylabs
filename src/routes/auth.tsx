@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Smartphone, Mail } from "lucide-react";
 
 const authSearch = z.object({
   mode: z.enum(["signin", "signup"]).optional(),
@@ -17,8 +17,15 @@ const signupSchema = z.object({
   name: z.string().min(2).max(80),
   email: z.string().email(),
   password: z.string().min(6),
+  phone: z.string().regex(/^[0-9]{10,15}$/, "Enter 10-15 digit phone number").optional(),
 });
-const signinSchema = z.object({ email: z.string().email(), password: z.string().min(6) });
+const signinSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+const phoneSchema = z.object({
+  phone: z.string().regex(/^[0-9]{10,15}$/, "Enter valid 10-15 digit phone number"),
+});
 
 export const Route = createFileRoute("/auth")({
   validateSearch: authSearch,
@@ -31,29 +38,36 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
-  const [tab, setTab] = useState<"signin" | "signup">(search.mode ?? "signin");
+  const [tab, setTab] = useState<"signin" | "signup" | "phone">(search.mode ?? "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpBusy, setOtpBusy] = useState(false);
+  const [otpTimer, setOtpTimer] = useState(0);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
       if (tab === "signup") {
-        const parsed = signupSchema.safeParse({ name, email, password });
+        const parsed = signupSchema.safeParse({ name, email, password, phone });
         if (!parsed.success) throw new Error(parsed.error.issues[0].message);
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
+          options: {
+            emailRedirectTo: window.location.origin,
+            data: { full_name: name, phone: phone || null },
+          },
         });
         if (error) throw error;
-        // If email confirmation required, session will be null
         if (!data.session) {
-          toast.success("Check your email to confirm your account, then sign in.");
+          toast.success("Check your email to confirm, then sign in.");
           setTab("signin");
           return;
         }
@@ -69,6 +83,51 @@ function AuthPage() {
       toast.error(err instanceof Error ? err.message : "Auth failed");
     } finally {
       setBusy(false);
+    }
+  };
+
+  const sendPhoneOTP = async () => {
+    const parsed = phoneSchema.safeParse({ phone });
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0].message);
+      return;
+    }
+    setOtpBusy(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: `+91${parsed.data.phone}`,
+      });
+      if (error) throw error;
+      setOtpSent(true);
+      setOtpTimer(300);
+      toast.success("OTP sent! Check your phone.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to send OTP");
+    } finally {
+      setOtpBusy(false);
+    }
+  };
+
+  const verifyOTP = async () => {
+    const otpStr = otp.join("");
+    if (otpStr.length !== 6) {
+      toast.error("Please enter all 6 digits");
+      return;
+    }
+    setOtpBusy(true);
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: `+91${phone}`,
+        token: otpStr,
+        type: "sms",
+      });
+      if (error) throw error;
+      toast.success("Phone verified!");
+      navigate({ to: search.redirect ?? "/" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "OTP verification failed");
+    } finally {
+      setOtpBusy(false);
     }
   };
 
@@ -93,17 +152,19 @@ function AuthPage() {
         </p>
 
         <Button onClick={google} variant="outline" className="mb-4 w-full rounded-full">
-          Continue with Google
+          <Mail className="mr-2 size-4" /> Continue with Google
         </Button>
         <div className="mb-4 text-center text-xs uppercase tracking-widest text-muted-foreground">
           or
         </div>
 
-        <Tabs value={tab} onValueChange={(v) => setTab(v as "signin" | "signup")}>
-          <TabsList className="grid w-full grid-cols-2">
+        <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="phone">Phone</TabsTrigger>
           </TabsList>
+
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <TabsContent value="signup" className="m-0">
               <Label>Full Name</Label>
@@ -153,6 +214,88 @@ function AuthPage() {
               {busy ? "Please wait…" : tab === "signup" ? "Create Account" : "Sign In"}
             </Button>
           </form>
+
+          <TabsContent value="phone" className="m-0">
+            {!otpSent ? (
+              <div className="mt-6 space-y-4">
+                <Label>Phone Number (India)</Label>
+                <div className="flex gap-2">
+                  <span className="flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-sm text-muted-foreground">
+                    +91
+                  </span>
+                  <Input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    placeholder="98765 43210"
+                    maxLength={10}
+                    className="rounded-l-none flex-1"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  onClick={sendPhoneOTP}
+                  disabled={otpBusy || phone.length !== 10}
+                  className="w-full rounded-full bg-brand font-bold uppercase tracking-tighter hover:bg-accent-cyan"
+                >
+                  {otpBusy ? "Sending…" : "Send OTP"}
+                </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  You'll receive a 6-digit OTP via SMS
+                </p>
+              </div>
+            ) : (
+              <div className="mt-6 space-y-4">
+                <Label>Enter 6-Digit OTP</Label>
+                <div className="flex gap-2 justify-center">
+                  {otp.map((digit, i) => (
+                    <Input
+                      key={i}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/, "");
+                        const next = [...otp];
+                        next[i] = val;
+                        setOtp(next);
+                        if (val && i < 5) {
+                          const input = document.querySelectorAll<HTMLInputElement>(
+                            `[data-otp-index="${i + 1}"]`
+                          )[0];
+                          input?.focus();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Backspace" && !digit && i > 0) {
+                          const prev = document.querySelectorAll<HTMLInputElement>(
+                            `[data-otp-index="${i - 1}"]`
+                          )[0];
+                          prev?.focus();
+                        }
+                      }}
+                      data-otp-index={i}
+                      className="w-12 h-12 text-center text-xl font-bold"
+                    />
+                  ))}
+                </div>
+                <Button
+                  type="button"
+                  onClick={verifyOTP}
+                  disabled={otpBusy || otp.join("").length !== 6}
+                  className="w-full rounded-full bg-brand font-bold uppercase tracking-tighter hover:bg-accent-cyan"
+                >
+                  {otpBusy ? "Verifying…" : "Verify & Sign In"}
+                </Button>
+                {otpTimer > 0 && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    Resend OTP in {otpTimer}s
+                  </p>
+                )}
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
@@ -164,3 +307,5 @@ function AuthPage() {
     </div>
   );
 }
+
+export default AuthPage;

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ShoppingBag, Search, User as UserIcon, X } from "lucide-react";
+import { ShoppingBag, Search, User as UserIcon, X, MessageCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";

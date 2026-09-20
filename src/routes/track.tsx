@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -57,6 +57,50 @@ function TrackPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<LookupRow | null>(null);
   const [searched, setSearched] = useState(false);
+  const [liveUpdating, setLiveUpdating] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const channelRef = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (result && result.id) {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+      }
+      setLiveUpdating(true);
+      channelRef.current = supabase
+        .channel(`order:${result.id}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "orders",
+            filter: `id=eq.${result.id}`,
+          },
+          (payload) => {
+            setResult((prev) => (prev ? { ...prev, ...payload.new } : prev));
+            setLastUpdated(new Date());
+            setLiveUpdating(false);
+            toast.info("Order status updated!");
+          }
+        )
+        .subscribe();
+    }
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
+    };
+  }, [result]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,6 +203,18 @@ function TrackPage() {
             trackingNumber={result.tracking_number}
             trackingUrl={result.tracking_url}
           />
+
+          {liveUpdating && (
+            <div className="flex items-center gap-2 text-sm text-brand">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-brand border-t-transparent" />
+              Live updating…
+            </div>
+          )}
+          {lastUpdated && !liveUpdating && (
+            <p className="text-xs text-muted-foreground">
+              Last updated: {lastUpdated.toLocaleTimeString()}
+            </p>
+          )}
 
           <div className="grid grid-cols-2 gap-4 text-sm border-t border-border pt-4">
             <div>

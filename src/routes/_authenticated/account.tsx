@@ -10,10 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProductTile } from "@/components/product/ProductTile";
 import { formatINR } from "@/lib/format";
-import { Trash2, ShoppingBag, RefreshCw, CreditCard, User, MapPin, Truck } from "lucide-react";
+import { Trash2, ShoppingBag, RefreshCw, CreditCard, User, MapPin, Truck, Package, Globe, Share2, Copy, Check } from "lucide-react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { OrderTimeline } from "@/components/orders/OrderTimeline";
 import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
 declare global {
   interface Window {
@@ -23,7 +24,7 @@ declare global {
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
-    meta: [{ title: "My Account — GullyGadget" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "My Account — GullyGadget", name: "robots", content: "noindex, nofollow" }],
   }),
   component: Account,
 });
@@ -297,6 +298,8 @@ function Account() {
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="addresses">Addresses</TabsTrigger>
           <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
+          <TabsTrigger value="returns">Returns</TabsTrigger>
+          <TabsTrigger value="referrals">Referrals</TabsTrigger>
         </TabsList>
 
         {/* Orders Tab */}
@@ -685,7 +688,67 @@ function Account() {
             );
           })}
         </TabsContent>
+
+        {/* Returns Tab */}
+        <TabsContent value="returns" className="mt-6">
+          <ReturnsTab />
+        </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+function ReturnsTab() {
+  const { user } = useAuth();
+  const { data: returns } = useQuery({
+    queryKey: ["my-returns"],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("return_requests")
+        .select("*")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+  });
+
+  if (!returns || returns.length === 0) {
+    return (
+      <EmptyState
+        icon={<Package className="size-8" />}
+        title="No returns yet"
+        description="Submit a return request when needed."
+        action={{ label: "Request Return", to: "/returns-request" }}
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {returns.map((r: any) => (
+        <div key={r.id} className="rounded-2xl bg-white p-4 ring-1 ring-border">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium capitalize">{r.return_type}</p>
+              <p className="text-sm text-muted-foreground">{r.reason}</p>
+              <p className="text-xs text-muted-foreground">
+                {new Date(r.created_at).toLocaleDateString()}
+              </p>
+            </div>
+            <span className={`rounded-full px-3 py-1 text-xs font-bold capitalize ${
+              r.status === "approved" ? "bg-success/10 text-success" :
+              r.status === "rejected" ? "bg-destructive/10 text-destructive" :
+              "bg-amber-100 text-amber-700"
+            }`}>
+              {r.status}
+            </span>
+          </div>
+        </div>
+      ))}
+      <Button variant="outline" className="w-full rounded-full mt-2" asChild>
+        <Link to={"/returns-request" as any}>Request New Return</Link>
+      </Button>
     </div>
   );
 }

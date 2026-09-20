@@ -13,9 +13,11 @@ import { ReviewsSection } from "@/components/reviews/ReviewsSection";
 import { RecentlyViewed } from "@/components/product/RecentlyViewed";
 import { useRecentlyViewed } from "@/lib/recentlyViewed";
 import { toast } from "sonner";
-
 import { siteConfig } from "@/lib/site";
-
+import { ProductFAQ } from "@/components/product/ProductFAQ";
+import { SocialShare } from "@/components/product/SocialShare";
+import { RefreshCw } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/products/$slug")({
   component: ProductPage,
   loader: async ({ params }) => {
@@ -176,15 +178,24 @@ function ProductPage() {
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
       <div className="grid gap-8 lg:grid-cols-2">
-        <ProductImageGallery images={images} productName={product.name} />
+        <ProductImageGallery
+          images={images}
+          videos={(product as any).videos_json ?? []}
+          productName={product.name}
+        />
 
         <div className="space-y-5">
-          {product.badge && (
-            <span className="inline-block rounded-full bg-offer-soft px-3 py-1 text-xs font-bold uppercase tracking-widest text-offer">
-              {product.badge}
-            </span>
-          )}
-          <h1 className="font-display text-4xl uppercase">{product.name}</h1>
+          <div className="flex items-center justify-between">
+            <div>
+              {product.badge && (
+                <span className="inline-block rounded-full bg-offer-soft px-3 py-1 text-xs font-bold uppercase tracking-widest text-offer">
+                  {product.badge}
+                </span>
+              )}
+              <h1 className="font-display text-4xl uppercase">{product.name}</h1>
+            </div>
+            <SocialShare productName={product.name} productSlug={product.slug} />
+          </div>
           <div className="flex items-center gap-2 text-sm">
             <div className="flex items-center gap-1">
               <Star className="size-4 fill-offer text-offer" />
@@ -359,6 +370,8 @@ function ProductPage() {
       {product && <ReviewsSection productId={product.id} />}
 
       {product && <RecentlyViewed excludeId={product.id} />}
+
+      {product && <ProductFAQ productName={product.name} />}
 
       {/* Structured data — only real values */}
       {product && (
