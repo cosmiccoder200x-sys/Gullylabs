@@ -1,188 +1,85 @@
-# Elegance E-commerce
-
-Act as a senior full-stack developer, UI/UX designer, SEO specialist, and e-commerce consultant.
-
-Build a complete, production-ready e-commerce website for my business.
-
-Tech Stack
-
-Frontend: React + Tailwind CSS
-
-Backend: Python Flask
-
-Database: PostgreSQL
-
-Authentication: JWT
-
-Deployment: Replit-ready
-
-Business Goals
-
-Attract new customers
-
-Showcase products professionally
-
-Increase conversions and sales
-
-Build trust and brand credibility
-
-Core Features
-
-Homepage
-
-Modern hero section with promotional banner
-
-Featured products carousel
-
-Best-selling products section
-
-Customer testimonials
-
-Brand story section
-
-Newsletter subscription
-
-Call-to-action buttons
-
-Product Catalog
-
-Grid and list views
-
-Product categories
-
-Advanced filtering
-
-Search with autocomplete
-
-Product sorting
-
-Pagination
-
-Product Pages
-
-Multiple product images
-
-Product description
-
-Specifications
-
-Reviews and ratings
-
-Related products
-
-Add to cart
-
-Wishlist
-
-Stock status
-
-Shopping Cart
-
-Update quantity
-
-Remove products
-
-Coupon codes
-
-Shipping calculator
-
-Order summary
-
-User Accounts
-
-Sign up
-
-Login
-
-Forgot password
-
-Order history
-
-Saved addresses
-
-Wishlist management
-
-Admin Dashboard
-
-Manage products
-
-Manage categories
-
-Manage orders
-
-Manage customers
-
-Manage coupons
-
-Sales analytics
-
-Inventory tracking
-
-Marketing Features
-
-SEO optimization
-
-Email marketing integration
-
-Product recommendations
-
-Recently viewed products
-
-Social media sharing
-
-Referral program
-
-Security
-
-Password hashing
-
-Input validation
-
-CSRF protection
-
-Rate limiting
-
-Secure authentication
-
-Performance
-
-Lazy loading
-
-Image optimization
-
-Fast page loading
-
-Mobile-first responsive design
-
-Design Style
-
-Premium modern UI
-
-Inspired by leading e-commerce platforms such as Amazon, Shopify, and Apple Store
-
-Clean typography
-
-Smooth animations
-
-Dark and light mode
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/5809cc63-da5e-4332-9a58-7d74c184fb99).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+# Gullylabs
+
+Production e-commerce storefront and admin platform — physical **and** digital products, built with TanStack Start, Supabase, and Razorpay.
+
+## Tech Stack
+
+- **Frontend**: React 19 + TanStack Start (file-based routing) + Tailwind CSS v4
+- **Backend**: TanStack Start server functions + Supabase Edge Functions
+- **Database**: Supabase (PostgreSQL, RLS, Realtime)
+- **Auth**: Supabase Auth — email/password, Google OAuth, phone OTP
+- **Payments**: Razorpay Checkout, order creation, verification & webhooks
+- **Hosting**: Vite / TanStack Start deployment (Vercel / Node)
+
+## Features
+
+### Storefront
+- Homepage with hero, featured/best-selling sections, testimonials, brand story
+- Product catalog: categories, filters, search with autocomplete, sorting, pagination
+- Product detail pages: multi-image + video gallery, specs, reviews & ratings, related products, stock status
+- Cart & wishlist (database-backed, per-user), coupon codes, shipping calculator
+- Checkout: shipping address, coupons, COD or Razorpay payments, atomic order creation
+- Delivery notifications and real-time order tracking (Supabase Realtime)
+
+### Digital Products
+- Digital marketplace at `/digital` with search, filters, categories
+- Instant-access purchase flow for digital goods
+- My Digital Library (account) and admin digital product management (`digital_metadata`)
+- Prepared for secure server-side downloads and signed URLs
+
+### Customer Experience
+- Phone OTP authentication, profile & address book, order history
+- Returns & refunds workflow (`returns-request`, `my-returns`, admin Returns tab)
+- Live customer support chat (widget + admin Chat tab)
+- Product FAQ, social sharing, delivery notifications
+
+### Admin
+- Dashboard, sales/inventory/customer analytics, order management
+- Product/category/coupon management, returns & chat handling, digital products
+- Role-based access control (`user_roles` with `admin` role)
+
+### Marketing & SEO
+- Meta/OG tags per route, sitemap, robots, JSON-LD schemas
+- Referral program (schema in place; UI roadmap in `NEXT_STEPS.md`)
+
+## Getting Started
+
+Requires Node.js 20+ (recommend [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)).
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
 npm i
-npm run dev
+npm run dev        # start dev server on http://localhost:8080
 ```
+
+### Scripts
+
+| Command          | Description                        |
+|------------------|------------------------------------|
+| `npm run dev`    | Start Vite dev server              |
+| `npm run build`  | Production build                   |
+| `npm run preview`| Preview the production build       |
+| `npm run lint`   | Run ESLint                         |
+| `npm run format` | Format code with Prettier          |
+
+## Project Structure
+
+```
+src/
+  components/     # UI components (layout, product, cart, chat, admin…)
+  lib/            # site config, formatting, utilities
+  routes/         # TanStack Start file-based routes
+  integrations/   # Supabase client & types
+supabase/
+  migrations/     # SQL migrations (schema, RLS, Edge Function setup)
+  functions/      # Edge Functions (Razorpay, auth, notifications…)
+```
+
+## Supabase Setup
+
+1. Create a project on [supabase.com](https://supabase.com) and copy your URL + anon key into `.env`.
+2. Apply migrations (`supabase/db push`) or run them in the SQL Editor.
+3. Deploy Edge Functions if used for payments (`supabase/functions/`).
+
+## Roadmap
+
+See [`NEXT_STEPS.md`](./NEXT_STEPS.md) for the full feature-by-feature rollout plan, known blockers, and the remaining digital-products, security, and SEO work.
