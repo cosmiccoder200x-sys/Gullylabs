@@ -162,6 +162,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      chat_messages: {
+        Row: {
+          created_at: string;
+          id: string;
+          is_read: boolean;
+          message: string;
+          order_id: string | null;
+          sender_type: string;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          is_read?: boolean;
+          message: string;
+          order_id?: string | null;
+          sender_type?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          is_read?: boolean;
+          message?: string;
+          order_id?: string | null;
+          sender_type?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "chat_messages_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       contact_messages: {
         Row: {
           created_at: string;
@@ -188,6 +233,57 @@ export type Database = {
           name?: string;
         };
         Relationships: [];
+      };
+      delivery_notifications: {
+        Row: {
+          channel: string;
+          event_type: string;
+          id: string;
+          message: string;
+          order_id: string;
+          read_at: string | null;
+          sent_at: string;
+          title: string;
+          user_id: string | null;
+        };
+        Insert: {
+          channel?: string;
+          event_type: string;
+          id?: string;
+          message: string;
+          order_id: string;
+          read_at?: string | null;
+          sent_at?: string;
+          title: string;
+          user_id?: string | null;
+        };
+        Update: {
+          channel?: string;
+          event_type?: string;
+          id?: string;
+          message?: string;
+          order_id?: string;
+          read_at?: string | null;
+          sent_at?: string;
+          title?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "delivery_notifications_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "delivery_notifications_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       coupons: {
         Row: {
@@ -315,33 +411,45 @@ export type Database = {
       };
       order_notifications: {
         Row: {
+          body: string | null;
+          channel: string | null;
           created_at: string;
           error: string | null;
           event: string;
           id: string;
+          notification_type: string | null;
           order_id: string;
           provider: string | null;
           status: string;
+          title: string | null;
           updated_at: string;
         };
         Insert: {
+          body?: string | null;
+          channel?: string | null;
           created_at?: string;
           error?: string | null;
           event: string;
           id?: string;
+          notification_type?: string | null;
           order_id: string;
           provider?: string | null;
           status?: string;
+          title?: string | null;
           updated_at?: string;
         };
         Update: {
+          body?: string | null;
+          channel?: string | null;
           created_at?: string;
           error?: string | null;
           event?: string;
           id?: string;
+          notification_type?: string | null;
           order_id?: string;
           provider?: string | null;
           status?: string;
+          title?: string | null;
           updated_at?: string;
         };
         Relationships: [
@@ -570,6 +678,7 @@ export type Database = {
           is_primary: boolean;
           product_id: string;
           sort_order: number;
+          video_url: string | null;
         };
         Insert: {
           alt_text?: string | null;
@@ -579,6 +688,7 @@ export type Database = {
           is_primary?: boolean;
           product_id: string;
           sort_order?: number;
+          video_url?: string | null;
         };
         Update: {
           alt_text?: string | null;
@@ -588,6 +698,7 @@ export type Database = {
           is_primary?: boolean;
           product_id?: string;
           sort_order?: number;
+          video_url?: string | null;
         };
         Relationships: [
           {
@@ -731,6 +842,7 @@ export type Database = {
           created_at: string;
           currency: string;
           description: string | null;
+          digital_metadata: Json | null;
           dimensions: Json | null;
           id: string;
           image_url: string | null;
@@ -741,6 +853,7 @@ export type Database = {
           mrp: number | null;
           name: string;
           price: number;
+          product_type: string | null;
           rating: number;
           review_count: number;
           shipping_days_max: number | null;
@@ -754,6 +867,7 @@ export type Database = {
           supplier_sku: string | null;
           supplier_url: string | null;
           updated_at: string;
+          videos_json: Json | null;
           weight_grams: number | null;
         };
         Insert: {
@@ -763,6 +877,7 @@ export type Database = {
           created_at?: string;
           currency?: string;
           description?: string | null;
+          digital_metadata?: Json | null;
           dimensions?: Json | null;
           id?: string;
           image_url?: string | null;
@@ -773,6 +888,7 @@ export type Database = {
           mrp?: number | null;
           name: string;
           price: number;
+          product_type?: string | null;
           rating?: number;
           review_count?: number;
           shipping_days_max?: number | null;
@@ -786,6 +902,7 @@ export type Database = {
           supplier_sku?: string | null;
           supplier_url?: string | null;
           updated_at?: string;
+          videos_json?: Json | null;
           weight_grams?: number | null;
         };
         Update: {
@@ -795,6 +912,7 @@ export type Database = {
           created_at?: string;
           currency?: string;
           description?: string | null;
+          digital_metadata?: Json | null;
           dimensions?: Json | null;
           id?: string;
           image_url?: string | null;
@@ -805,6 +923,7 @@ export type Database = {
           mrp?: number | null;
           name?: string;
           price?: number;
+          product_type?: string | null;
           rating?: number;
           review_count?: number;
           shipping_days_max?: number | null;
@@ -818,6 +937,7 @@ export type Database = {
           supplier_sku?: string | null;
           supplier_url?: string | null;
           updated_at?: string;
+          videos_json?: Json | null;
           weight_grams?: number | null;
         };
         Relationships: [
@@ -843,7 +963,12 @@ export type Database = {
           created_at: string;
           full_name: string | null;
           id: string;
+          otp_expires_at: string | null;
           phone: string | null;
+          phone_otp_attempts: number;
+          phone_verified: boolean;
+          referral_code: string | null;
+          referred_by: string | null;
           updated_at: string;
         };
         Insert: {
@@ -851,7 +976,12 @@ export type Database = {
           created_at?: string;
           full_name?: string | null;
           id: string;
+          otp_expires_at?: string | null;
           phone?: string | null;
+          phone_otp_attempts?: number;
+          phone_verified?: boolean;
+          referral_code?: string | null;
+          referred_by?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -859,7 +989,12 @@ export type Database = {
           created_at?: string;
           full_name?: string | null;
           id?: string;
+          otp_expires_at?: string | null;
           phone?: string | null;
+          phone_otp_attempts?: number;
+          phone_verified?: boolean;
+          referral_code?: string | null;
+          referred_by?: string | null;
           updated_at?: string;
         };
         Relationships: [];
@@ -995,6 +1130,179 @@ export type Database = {
             columns: ["variant_id"];
             isOneToOne: false;
             referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      refund_transactions: {
+        Row: {
+          amount: number;
+          created_at: string;
+          currency: string;
+          id: string;
+          method: string;
+          order_id: string;
+          processed_at: string | null;
+          reference_number: string | null;
+          return_request_id: string | null;
+          status: string;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          method: string;
+          order_id: string;
+          processed_at?: string | null;
+          reference_number?: string | null;
+          return_request_id?: string | null;
+          status?: string;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          method?: string;
+          order_id?: string;
+          processed_at?: string | null;
+          reference_number?: string | null;
+          return_request_id?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "refund_transactions_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "refund_transactions_return_request_id_fkey";
+            columns: ["return_request_id"];
+            isOneToOne: false;
+            referencedRelation: "return_requests";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      referrals: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          referred_user_id: string;
+          referrer_id: string;
+          reward_claimed: boolean | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          referred_user_id: string;
+          referrer_id: string;
+          reward_claimed?: boolean | null;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          referred_user_id?: string;
+          referrer_id?: string;
+          reward_claimed?: boolean | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referred_user_id_fkey";
+            columns: ["referred_user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "referrals_referrer_id_fkey";
+            columns: ["referrer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      return_requests: {
+        Row: {
+          approved_at: string | null;
+          approved_by: string | null;
+          created_at: string;
+          description: string | null;
+          id: string;
+          order_id: string;
+          order_item_id: string | null;
+          reason: string;
+          rejection_reason: string | null;
+          return_type: string;
+          status: string;
+          tracking_number: string | null;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          order_id: string;
+          order_item_id?: string | null;
+          reason: string;
+          rejection_reason?: string | null;
+          return_type?: string;
+          status?: string;
+          tracking_number?: string | null;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          order_id?: string;
+          order_item_id?: string | null;
+          reason?: string;
+          rejection_reason?: string | null;
+          return_type?: string;
+          status?: string;
+          tracking_number?: string | null;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "return_requests_approved_by_fkey";
+            columns: ["approved_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "return_requests_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "return_requests_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "return_requests_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
             referencedColumns: ["id"];
           },
         ];

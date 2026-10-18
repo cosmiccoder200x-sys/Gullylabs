@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useNavigate } from "@tanstack/react-router";
 import { formatINR } from "@/lib/format";
 
@@ -45,6 +46,16 @@ function DigitalPage() {
     }
   };
 
+  const filteredProducts = digitalProducts.filter((product) => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase();
+    return (
+      product.name?.toLowerCase().includes(q) ||
+      product.short_description?.toLowerCase().includes(q) ||
+      product.description?.toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
       <h1 className="text-3xl font-bold tracking-tight">Digital Products</h1>
@@ -52,10 +63,11 @@ function DigitalPage() {
         Templates, productivity systems, spreadsheets, and other useful digital products
       </p>
 
-      <div className="mt-6">
-        <input
+      <div className="mt-6 max-w-md">
+        <Input
           placeholder="Search digital products..."
-          onInput={setQuery}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
       </div>
 
@@ -65,12 +77,12 @@ function DigitalPage() {
             <div className="h-64 rounded-3xl bg-secondary" />
             <div className="h-8 bg-secondary rounded w-3/4" />
           </div>
-        ) : digitalProducts.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12">
             <h3 className="text-xl font-medium">No digital products found</h3>
             <p className="text-muted-foreground">Check back soon for new digital products.</p>
           </div>
-        ) : digitalProducts.map((product) => (
+        ) : filteredProducts.map((product) => (
           <div
             key={product.id}
             className="rounded-3xl bg-white p-6 hover:bg-secondary/5 transition-colors"

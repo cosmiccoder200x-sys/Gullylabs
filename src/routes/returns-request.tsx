@@ -20,7 +20,7 @@ export const Route = createFileRoute("/returns-request")({
   component: ReturnsRequest,
 });
 
-export function ReturnsRequest() {
+function ReturnsRequest() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [orderId, setOrderId] = useState("");
