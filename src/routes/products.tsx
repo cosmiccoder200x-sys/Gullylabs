@@ -39,9 +39,9 @@ export const Route = createFileRoute("/products")({
     meta: [
       { title: "Shop All — Gullylabs" },
       { name: "description", content: "Browse trending home appliance gadgets under ₹1000." },
-      { property: "og:url", content: "https://gullygadget.com/products" },
+      { property: "og:url", content: "https://gullylab.vercel.app/products" },
     ],
-    links: [{ rel: "canonical", href: "https://gullygadget.com/products" }],
+    links: [{ rel: "canonical", href: "https://gullylab.vercel.app/products" }],
   }),
   component: Catalog,
 });

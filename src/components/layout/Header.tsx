@@ -92,7 +92,7 @@ export function Header() {
           to="/"
           className="font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl shrink-0"
         >
-          Gully<span className="text-brand">Gadget</span>
+          Gully<span className="text-brand">labs</span>
         </Link>
 
         <nav

@@ -12,7 +12,7 @@ export function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" className="font-display text-2xl font-extrabold tracking-tight">
-              Gully<span className="text-brand">Gadget</span>
+              Gully<span className="text-brand">labs</span>
             </Link>
             <p className="mt-3 max-w-xs text-sm text-white/60">
               Trending home and lifestyle gadgets under ₹999. Quality tested. Cash on Delivery

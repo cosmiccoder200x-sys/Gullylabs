@@ -4,8 +4,8 @@
 export const siteConfig = {
   name: "Gullylabs",
   shortName: "Gullylabs",
-  url: "https://gullygadget.com", // EDIT: set to production domain
-  email: "support@gullygadget.com", // EDIT: support email
+  url: "https://gullylab.vercel.app", // EDIT: set to production domain
+  email: "support@gullylabs.com", // EDIT: support email
   phone: "+91-90000-00000", // EDIT: business phone (optional)
   address: "Gullylabs Tech Pvt Ltd, India", // EDIT: registered address
   description:

@@ -3,7 +3,7 @@ import { useState, useRef, useCallback } from "react";
 import { z } from "zod";
 import { useCart, useValidateCart } from "@/lib/cart";
 import { useAuth } from "@/lib/auth-store";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -216,13 +216,13 @@ function Checkout() {
       const token = sessionData.session?.access_token;
 
       const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-razorpay-order`,
+        `${SUPABASE_URL}/functions/v1/create-razorpay-order`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            apikey: SUPABASE_PUBLISHABLE_KEY,
           },
           body: JSON.stringify({ order_id: orderId }),
         },
@@ -247,13 +247,13 @@ function Checkout() {
           // Payment successful — verify server-side
           try {
             const verifyRes = await fetch(
-              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-razorpay-payment`,
+              `${SUPABASE_URL}/functions/v1/verify-razorpay-payment`,
               {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${token}`,
-                  apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+                  apikey: SUPABASE_PUBLISHABLE_KEY,
                 },
                 body: JSON.stringify({
                   razorpay_order_id: response.razorpay_order_id,

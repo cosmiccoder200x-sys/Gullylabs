@@ -40,7 +40,7 @@ export const faqItems: FaqItem[] = [
   {
     category: "Support",
     q: "How do I contact support?",
-    a: "Use the Contact Us page form or email support@gullygadget.com. Include your order number for faster help. See Contact page for editable business details.",
+    a: "Use the Contact Us page form or email support@gullylabs.com. Include your order number for faster help. See Contact page for editable business details.",
   },
   {
     category: "Orders",

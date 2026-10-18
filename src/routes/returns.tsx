@@ -59,7 +59,7 @@ function ReturnsPage() {
         <h2 className="font-display text-xl uppercase">Damaged or Wrong Item</h2>
         <p className="text-muted-foreground">
           Contact us within 48 hours of delivery with photos and order details for priority
-          handling. Use the contact form or email {import.meta.env.VITE_SUPPORT_EMAIL || "support@gullygadget.com"}.
+          handling. Use the contact form or email {import.meta.env.VITE_SUPPORT_EMAIL || "support@gullylabs.com"}.
         </p>
         <div className="rounded-2xl bg-card p-4 ring-1 ring-border">
           <p className="text-sm font-medium">Need help?</p>

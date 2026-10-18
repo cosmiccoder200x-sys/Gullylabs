@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-store";
 import { useWishlist, useToggleWishlist, useAddToCart } from "@/lib/cart";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -190,13 +190,13 @@ function Account() {
         const { data: sessionData } = await supabase.auth.getSession();
         const token = sessionData.session?.access_token;
         const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-razorpay-order`,
+          `${SUPABASE_URL}/functions/v1/create-razorpay-order`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              apikey: SUPABASE_PUBLISHABLE_KEY,
             },
             body: JSON.stringify({ order_id: orderId }),
           },
@@ -220,13 +220,13 @@ function Account() {
           }) => {
             try {
               const verifyRes = await fetch(
-                `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-razorpay-payment`,
+                `${SUPABASE_URL}/functions/v1/verify-razorpay-payment`,
                 {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
-                    apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+                    apikey: SUPABASE_PUBLISHABLE_KEY,
                   },
                   body: JSON.stringify({
                     razorpay_order_id: response.razorpay_order_id,
